@@ -2,7 +2,7 @@
  * Java CSV is a stream based library for reading and writing
  * CSV and other delimited data.
  *   
- * Copyright (C) Bruce Dunwiddie bruce@csvreader.org
+ * Copyright (C) Bruce Dunwiddie bruce@csvreader.com
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
