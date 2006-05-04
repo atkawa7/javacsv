@@ -1,4 +1,4 @@
-<project name="CSV" default="dist" basedir=".">
+<project name="javacsv" default="dist" basedir=".">
 	<description>
 		simple example build file
 	</description>
