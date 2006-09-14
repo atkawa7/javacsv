@@ -387,8 +387,6 @@ public class CsvWriter {
 
         if (textQualify) {
             outputStream.write(textQualifier);
-
-            content = content.replaceAll(singleQualifier, doubleQualifier);
         }
 
         outputStream.write(content);
