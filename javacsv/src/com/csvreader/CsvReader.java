@@ -70,8 +70,6 @@ public class CsvReader {
 
     private static final int INITIAL_MAX_COLUMN_COUNT = 10;
 
-    private static final boolean DEMO = false;
-
     private Reader inputStream = null;
 
     private String fileName = null;
@@ -590,15 +588,7 @@ public class CsvReader {
             returnVal = EMPTY;
         }
 
-        if (DEMO) {
-            if (!readingHeaders && columnIndex % 2 == 1) {
-                return "DEMO";
-            } else {
-                return returnVal;
-            }
-        } else {
-            return returnVal;
-        }
+        return returnVal;
     }
 
     /**
