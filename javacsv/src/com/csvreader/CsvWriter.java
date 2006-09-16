@@ -385,10 +385,6 @@ public class CsvWriter {
             }
         }
 
-        if (textQualify) {
-            outputStream.write(textQualifier);
-        }
-
         outputStream.write(content);
 
         if (textQualify) {
