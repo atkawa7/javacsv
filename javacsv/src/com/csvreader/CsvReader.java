@@ -1146,7 +1146,7 @@ public class CsvReader {
             // if no more data could be found, set flag stating that
             // the end of the data was found
 
-            if (bufferCount == 0) {
+            if (bufferCount == -1) {
                 hasMoreData = false;
             }
         }
