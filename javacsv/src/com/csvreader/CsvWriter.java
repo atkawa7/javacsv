@@ -316,36 +316,29 @@ public class CsvWriter {
 			outputStream.write(userSettings.TextQualifier);
 
 			if (userSettings.EscapeMode == ESCAPE_MODE_BACKSLASH) {
-				content = replace(content,
-						"" + Letters.BACKSLASH,
-						"" + Letters.BACKSLASH + Letters.BACKSLASH);
-				content = replace(content,
-						"" + userSettings.TextQualifier,
-						"" + Letters.BACKSLASH + userSettings.TextQualifier);
+				content = replace(content, "" + Letters.BACKSLASH, ""
+						+ Letters.BACKSLASH + Letters.BACKSLASH);
+				content = replace(content, "" + userSettings.TextQualifier, ""
+						+ Letters.BACKSLASH + userSettings.TextQualifier);
 			} else {
-				content = replace(content,
-						"" + userSettings.TextQualifier,
-						"" + userSettings.TextQualifier
-								+ userSettings.TextQualifier);
+				content = replace(content, "" + userSettings.TextQualifier, ""
+						+ userSettings.TextQualifier
+						+ userSettings.TextQualifier);
 			}
 		} else if (userSettings.EscapeMode == ESCAPE_MODE_BACKSLASH) {
-			content = replace(content,
-					"" + Letters.BACKSLASH,
-					"" + Letters.BACKSLASH + Letters.BACKSLASH);
-			content = replace(content,
-					"" + userSettings.Delimiter,
-					"" + Letters.BACKSLASH + userSettings.Delimiter);
+			content = replace(content, "" + Letters.BACKSLASH, ""
+					+ Letters.BACKSLASH + Letters.BACKSLASH);
+			content = replace(content, "" + userSettings.Delimiter, ""
+					+ Letters.BACKSLASH + userSettings.Delimiter);
 
 			if (useCustomRecordDelimiter) {
-				content = replace(content,
-						"" + userSettings.RecordDelimiter,
+				content = replace(content, "" + userSettings.RecordDelimiter,
 						"" + Letters.BACKSLASH + userSettings.RecordDelimiter);
 			} else {
-				content = replace(content,
-						"" + Letters.CR,
-						"" + Letters.BACKSLASH + Letters.CR);
-				content = replace(content,
-						"" + Letters.LF, "" + Letters.BACKSLASH + Letters.LF);
+				content = replace(content, "" + Letters.CR, ""
+						+ Letters.BACKSLASH + Letters.CR);
+				content = replace(content, "" + Letters.LF, ""
+						+ Letters.BACKSLASH + Letters.LF);
 			}
 
 			if (firstColumn && content.length() > 0

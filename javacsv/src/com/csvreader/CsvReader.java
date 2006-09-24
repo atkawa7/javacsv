@@ -21,7 +21,9 @@
 package com.csvreader;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -110,7 +112,8 @@ public class CsvReader {
 	 *            The {@link java.nio.charset.Charset Charset} to use while
 	 *            parsing the data.
 	 */
-	public CsvReader(String fileName, char delimiter, Charset charset) {
+	public CsvReader(String fileName, char delimiter, Charset charset)
+			throws FileNotFoundException {
 		if (fileName == null) {
 			throw new IllegalArgumentException(
 					"Parameter fileName can not be null.");
@@ -119,6 +122,11 @@ public class CsvReader {
 		if (charset == null) {
 			throw new IllegalArgumentException(
 					"Parameter charset can not be null.");
+		}
+
+		if (!new File(fileName).exists()) {
+			throw new FileNotFoundException("File " + fileName
+					+ " does not exist.");
 		}
 
 		this.fileName = fileName;
@@ -138,7 +146,8 @@ public class CsvReader {
 	 * @param delimiter
 	 *            The character to use as the column delimiter.
 	 */
-	public CsvReader(String fileName, char delimiter) {
+	public CsvReader(String fileName, char delimiter)
+			throws FileNotFoundException {
 		this(fileName, delimiter, Charset.forName("ISO-8859-1"));
 	}
 
@@ -150,7 +159,7 @@ public class CsvReader {
 	 * @param fileName
 	 *            The path to the file to use as the data source.
 	 */
-	public CsvReader(String fileName) {
+	public CsvReader(String fileName) throws FileNotFoundException {
 		this(fileName, Letters.COMMA);
 	}
 
