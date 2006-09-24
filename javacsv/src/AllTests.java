@@ -1,11 +1,30 @@
-import java.io.*;
-import java.lang.reflect.*;
-import java.nio.*;
-import java.nio.charset.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.Reader;
+import java.io.Writer;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
 
-import org.junit.*;
-import com.csvreader.*;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
+
+import com.csvreader.CsvReader;
+import com.csvreader.CsvWriter;
 
 public class AllTests {
 	public static void main(String[] args) throws Exception {
@@ -67,8 +86,7 @@ public class AllTests {
 						} else {
 							// is there a cleaner way of saying this?
 							if (!e.getCause().getClass().equals(
-									testAnnotation.expected()))
-							{
+									testAnnotation.expected())) {
 								System.out.println(testClass.getName() + "."
 										+ method.getName() + ": "
 										+ "Exception expected: "
@@ -1419,8 +1437,6 @@ public class AllTests {
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	// [ExpectedException(typeof(ArgumentNullException),
-	// "Data can not be null.\r\nParameter name: data")]
 	public void test77() throws Exception {
 		CsvReader.parse(null);
 	}
@@ -1434,9 +1450,6 @@ public class AllTests {
 	}
 
 	@Test(expected = IOException.class)
-	// [ExpectedException(typeof(ObjectDisposedException),
-	// "This object has been previously disposed. Methods on this object can no
-	// longer be called.\r\nObject name: \"DataHandlers.Csv.CsvReader\".")]
 	public void test79() throws Exception {
 		CsvReader reader;
 		reader = CsvReader.parse("");
@@ -1445,10 +1458,6 @@ public class AllTests {
 	}
 
 	@Test(expected = IOException.class)
-	// [ExpectedException(typeof(IOException),
-	// "Maximum column length of 100,000 exceeded in column 0 in record 0." +
-	// " Set the SafetySwitch property to false if you're expecting column
-	// lengths greater than 100,000 characters to avoid this error.")]
 	public void test81() throws Exception {
 		CsvReader reader = CsvReader.parse(generateString('a', 100001));
 		reader.readRecord();
@@ -1456,11 +1465,6 @@ public class AllTests {
 	}
 
 	@Test(expected = IOException.class)
-	// [ExpectedException(typeof(IOException),
-	// "Maximum column count of 100,000 exceeded in record 0. Set the
-	// SafetySwitch property to false" +
-	// " if you're expecting more than 100,000 columns per record to avoid this
-	// error.")]
 	public void test82() throws Exception {
 		StringBuilder holder = new StringBuilder(200010);
 
@@ -1539,23 +1543,17 @@ public class AllTests {
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	// [ExpectedException(typeof(ArgumentNullException),
-	// "File name can not be null.\r\nParameter name: fileName")]
 	public void test88() throws Exception {
 		CsvReader reader = new CsvReader((String) null, ',', Charset
 				.forName("ISO-8859-1"));
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	// [ExpectedException(typeof(ArgumentNullException),
-	// "Encoding can not be null.\r\nParameter name: encoding")]
 	public void test89() throws Exception {
 		CsvReader reader = new CsvReader("temp.csv", ',', null);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	// [ExpectedException(typeof(ArgumentNullException),
-	// "Input stream can not be null.\r\nParameter name: inputStream")]
 	public void test90() throws Exception {
 		CsvReader reader = new CsvReader((Reader) null, ',');
 	}
@@ -1603,31 +1601,22 @@ public class AllTests {
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	// [ExpectedException(typeof(ArgumentNullException),
-	// "File name can not be null.\r\nParameter name: fileName")]
 	public void test112() throws Exception {
 		CsvWriter writer = new CsvWriter((String) null, ',', Charset
 				.forName("ISO-8859-1"));
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	// [ExpectedException(typeof(ArgumentNullException),
-	// "Encoding can not be null.\r\nParameter name: encoding")]
 	public void test113() throws Exception {
 		CsvWriter writer = new CsvWriter("test.csv", ',', (Charset) null);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	// [ExpectedException(typeof(ArgumentNullException),
-	// "Output stream can not be null.\r\nParameter name: outputStream")]
 	public void test114() throws Exception {
 		CsvWriter writer = new CsvWriter((Writer) null, ',');
 	}
 
 	@Test(expected = IOException.class)
-	// [ExpectedException(typeof(ObjectDisposedException),
-	// "This object has been previously disposed. Methods on this object can no
-	// longer be called.\r\nObject name: \"DataHandlers.Csv.CsvWriter\".")]
 	public void test115() throws Exception {
 		CsvWriter writer = new CsvWriter("test.csv");
 
@@ -2018,10 +2007,6 @@ public class AllTests {
 	}
 
 	@Test(expected = IOException.class)
-	// [ExpectedException(typeof(IOException),
-	// "Maximum column length of 100,000 exceeded in column 0 in record 0." +
-	// " Set the SafetySwitch property to false if you're expecting column
-	// lengths greater than 100,000 characters to avoid this error.")]
 	public void test143() throws Exception {
 		CsvReader reader = CsvReader.parse("\"" + generateString('a', 100001)
 				+ "\"");
@@ -2101,58 +2086,52 @@ public class AllTests {
 		reader.close();
 	}
 
-	// @Test(expected = IOException.class)
-	// // [ExpectedException(typeof(FileNotFoundException),
-	// // "File C:\\somefilethatdoesntexist.csv does not exist.")]
-	// public void test149() throws Exception {
-	// CsvReader reader = new CsvReader("C:\\somefilethatdoesntexist.csv");
-	// }
+	@Test(expected = FileNotFoundException.class)
+	public void test149() throws Exception {
+		CsvReader reader = new CsvReader("C:\\somefilethatdoesntexist.csv");
+	}
 
-	// @Test(expected = IOException.class)
-	// // [ExpectedException(typeof(ObjectDisposedException),
-	// // "This object has been previously disposed. Methods on this object can
-	// no
-	// // longer be called.\r\nObject name: \"DataHandlers.Csv.CsvReader\".")]
-	// public void test173() throws Exception {
-	// FailingTextReader fail = new FailingTextReader();
-	//
-	// CsvReader reader = new CsvReader(fail);
-	// boolean exceptionThrown = false;
-	//
-	// Assert.assertFalse(fail.DisposeCalled);
-	// try {
-	// // need to test IO exception block logic while trying to read
-	// reader.readRecord();
-	// } catch (IOException ex) {
-	// // make sure stream that caused exception
-	// // has been sent a dipose call
-	// Assert.assertTrue(fail.DisposeCalled);
-	// exceptionThrown = true;
-	// Assert.assertEquals("Read failed.", ex.getMessage());
-	// } finally {
-	// reader.close();
-	// }
-	//
-	// Assert.assertTrue(exceptionThrown);
-	//
-	// // test to make sure object has been marked
-	// // internally as disposed
-	// String[] headers = reader.getHeaders();
-	// }
-	//
-	// private class FailingTextReader extends StringReader {
-	// public boolean DisposeCalled = false;
-	//
-	// public FailingTextReader() {
-	// super("");
-	// }
-	//
-	// public int Read(char[] buffer, int index, int count) throws Exception {
-	// throw new IOException("Read failed.");
-	// }
-	//
-	// public void close() {
-	// DisposeCalled = true;
-	// }
-	// }
+	@Test(expected = IOException.class)
+	public void test173() throws Exception {
+		FailingReader fail = new FailingReader();
+
+		CsvReader reader = new CsvReader(fail);
+		boolean exceptionThrown = false;
+
+		Assert.assertFalse(fail.DisposeCalled);
+		try {
+			// need to test IO exception block logic while trying to read
+			reader.readRecord();
+		} catch (IOException ex) {
+			// make sure stream that caused exception
+			// has been sent a dipose call
+			Assert.assertTrue(fail.DisposeCalled);
+			exceptionThrown = true;
+			Assert.assertEquals("Read failed.", ex.getMessage());
+		} finally {
+			reader.close();
+		}
+
+		Assert.assertTrue(exceptionThrown);
+
+		// test to make sure object has been marked
+		// internally as disposed
+		String[] headers = reader.getHeaders();
+	}
+
+	private class FailingReader extends Reader {
+		public boolean DisposeCalled = false;
+
+		public FailingReader() {
+			super("");
+		}
+
+		public int read(char[] buffer, int index, int count) throws IOException {
+			throw new IOException("Read failed.");
+		}
+
+		public void close() {
+			DisposeCalled = true;
+		}
+	}
 }
