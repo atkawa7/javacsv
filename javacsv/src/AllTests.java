@@ -128,6 +128,11 @@ public class AllTests {
 		return buffer.toString();
 	}
 
+	private static void assertException(Exception expected, Exception actual) {
+		Assert.assertEquals(expected.getClass(), actual.getClass());
+		Assert.assertEquals(expected.getMessage(), actual.getMessage());
+	}
+
 	@Test
 	public void test1() throws Exception {
 		CsvReader reader = CsvReader.parse("1,2");
@@ -1436,9 +1441,14 @@ public class AllTests {
 		reader.close();
 	}
 
-	@Test(expected = IllegalArgumentException.class)
-	public void test77() throws Exception {
-		CsvReader.parse(null);
+	@Test
+	public void test77() {
+		try {
+			CsvReader.parse(null);
+		} catch (Exception ex) {
+			assertException(new IllegalArgumentException(
+					"Parameter data can not be null."), ex);
+		}
 	}
 
 	@Test
@@ -1449,22 +1459,36 @@ public class AllTests {
 		reader.close();
 	}
 
-	@Test(expected = IOException.class)
-	public void test79() throws Exception {
+	@Test
+	public void test79() {
 		CsvReader reader;
 		reader = CsvReader.parse("");
 		reader.close();
-		reader.readRecord();
+		try {
+			reader.readRecord();
+		} catch (Exception ex) {
+			assertException(
+					new IOException(
+							"This instance of the CsvReader class has already been closed."),
+					ex);
+		}
 	}
 
-	@Test(expected = IOException.class)
+	@Test
 	public void test81() throws Exception {
 		CsvReader reader = CsvReader.parse(generateString('a', 100001));
-		reader.readRecord();
+		try {
+			reader.readRecord();
+		} catch (Exception ex) {
+			assertException(
+					new IOException(
+							"Maximum column length of 100,000 exceeded in column 0 in record 0. Set the SafetySwitch property to false if you're expecting column lengths greater than 100,000 characters to avoid this error."),
+					ex);
+		}
 		reader.close();
 	}
 
-	@Test(expected = IOException.class)
+	@Test
 	public void test82() throws Exception {
 		StringBuilder holder = new StringBuilder(200010);
 
@@ -1475,7 +1499,14 @@ public class AllTests {
 		holder.append("a");
 
 		CsvReader reader = CsvReader.parse(holder.toString());
-		reader.readRecord();
+		try {
+			reader.readRecord();
+		} catch (Exception ex) {
+			assertException(
+					new IOException(
+							"Maximum column count of 100,000 exceeded in record 0. Set the SafetySwitch property to false if you're expecting more than 100,000 columns per record to avoid this error."),
+					ex);
+		}
 		reader.close();
 	}
 
@@ -1542,20 +1573,35 @@ public class AllTests {
 		new File("temp.csv").delete();
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void test88() throws Exception {
-		CsvReader reader = new CsvReader((String) null, ',', Charset
-				.forName("ISO-8859-1"));
+		try {
+			CsvReader reader = new CsvReader((String) null, ',', Charset
+					.forName("ISO-8859-1"));
+		} catch (Exception ex) {
+			assertException(new IllegalArgumentException(
+					"Parameter fileName can not be null."), ex);
+		}
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void test89() throws Exception {
-		CsvReader reader = new CsvReader("temp.csv", ',', null);
+		try {
+			CsvReader reader = new CsvReader("temp.csv", ',', null);
+		} catch (Exception ex) {
+			assertException(new IllegalArgumentException(
+					"Parameter charset can not be null."), ex);
+		}
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void test90() throws Exception {
-		CsvReader reader = new CsvReader((Reader) null, ',');
+		try {
+			CsvReader reader = new CsvReader((Reader) null, ',');
+		} catch (Exception ex) {
+			assertException(new IllegalArgumentException(
+					"Parameter inputStream can not be null."), ex);
+		}
 	}
 
 	@Test
@@ -1600,29 +1646,45 @@ public class AllTests {
 		reader.close();
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void test112() throws Exception {
-		CsvWriter writer = new CsvWriter((String) null, ',', Charset
-				.forName("ISO-8859-1"));
+		try {
+			CsvWriter writer = new CsvWriter((String) null, ',', Charset
+					.forName("ISO-8859-1"));
+		} catch (Exception ex) {
+			assertException(new IllegalArgumentException("Parameter fileName can not be null."), ex);
+		}
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void test113() throws Exception {
-		CsvWriter writer = new CsvWriter("test.csv", ',', (Charset) null);
+		try {
+			CsvWriter writer = new CsvWriter("test.csv", ',', (Charset) null);
+		} catch (Exception ex) {
+			assertException(new IllegalArgumentException("Parameter charset can not be null."), ex);
+		}
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void test114() throws Exception {
-		CsvWriter writer = new CsvWriter((Writer) null, ',');
+		try {
+			CsvWriter writer = new CsvWriter((Writer) null, ',');
+		} catch (Exception ex) {
+			assertException(new IllegalArgumentException("Parameter outputStream can not be null."), ex);
+		}
 	}
 
-	@Test(expected = IOException.class)
+	@Test
 	public void test115() throws Exception {
-		CsvWriter writer = new CsvWriter("test.csv");
+		try {
+			CsvWriter writer = new CsvWriter("test.csv");
 
-		writer.close();
+			writer.close();
 
-		writer.write("");
+			writer.write("");
+		} catch (Exception ex) {
+			assertException(new IOException("This instance of the CsvWriter class has already been closed."), ex);
+		}
 	}
 
 	@Test
@@ -2006,11 +2068,18 @@ public class AllTests {
 		reader.close();
 	}
 
-	@Test(expected = IOException.class)
+	@Test
 	public void test143() throws Exception {
 		CsvReader reader = CsvReader.parse("\"" + generateString('a', 100001)
 				+ "\"");
-		reader.readRecord();
+		try
+		{
+			reader.readRecord();
+		}
+		catch (Exception ex)
+		{
+			assertException(new IOException("Maximum column length of 100,000 exceeded in column 0 in record 0. Set the SafetySwitch property to false if you're expecting column lengths greater than 100,000 characters to avoid this error."), ex);
+		}
 		reader.close();
 	}
 
@@ -2086,12 +2155,19 @@ public class AllTests {
 		reader.close();
 	}
 
-	@Test(expected = FileNotFoundException.class)
+	@Test
 	public void test149() throws Exception {
-		CsvReader reader = new CsvReader("C:\\somefilethatdoesntexist.csv");
+		try
+		{
+			CsvReader reader = new CsvReader("C:\\somefilethatdoesntexist.csv");
+		}
+		catch (Exception ex)
+		{
+			assertException(new FileNotFoundException("File C:\\somefilethatdoesntexist.csv does not exist."), ex);
+		}
 	}
 
-	@Test(expected = IOException.class)
+	@Test
 	public void test173() throws Exception {
 		FailingReader fail = new FailingReader();
 
@@ -2116,7 +2192,14 @@ public class AllTests {
 
 		// test to make sure object has been marked
 		// internally as disposed
-		String[] headers = reader.getHeaders();
+		try
+		{
+			String[] headers = reader.getHeaders();
+		}
+		catch (Exception ex)
+		{
+			assertException(new IOException("This instance of the CsvReader class has already been closed."), ex);
+		}
 	}
 
 	private class FailingReader extends Reader {
