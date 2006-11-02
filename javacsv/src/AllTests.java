@@ -2194,7 +2194,7 @@ public class AllTests {
 		// internally as disposed
 		try
 		{
-			String[] headers = reader.getHeaders();
+			reader.getHeaders();
 		}
 		catch (Exception ex)
 		{
