@@ -624,7 +624,7 @@ public class CsvReader {
 						startedWithQualifier = true;
 						boolean lastLetterWasQualifier = false;
 
-						char escapeChar = Letters.QUOTE;
+						char escapeChar = userSettings.TextQualifier;
 
 						if (userSettings.EscapeMode == ESCAPE_MODE_BACKSLASH) {
 							escapeChar = Letters.BACKSLASH;
