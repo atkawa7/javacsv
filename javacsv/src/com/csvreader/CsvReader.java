@@ -423,7 +423,7 @@ public class CsvReader {
 	 * lengths and max column count per record supported by the parser will
 	 * greatly increase. Default is true.
 	 * 
-	 * @return
+	 * @return The current setting of the safety switch.
 	 */
 	public boolean getSafetySwitch() {
 		return userSettings.SafetySwitch;
