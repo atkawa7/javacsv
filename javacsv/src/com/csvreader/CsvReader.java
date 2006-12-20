@@ -1239,7 +1239,7 @@ public class CsvReader {
 			headersHolder.Headers[i] = columnValue;
 
 			// if there are duplicate header names, we will save the last one
-			headersHolder.IndexByName.put(columnValue, i);
+			headersHolder.IndexByName.put(columnValue, new Integer(i));
 		}
 
 		if (result) {
