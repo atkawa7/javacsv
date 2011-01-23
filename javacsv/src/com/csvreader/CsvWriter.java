@@ -24,7 +24,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
+import java.io.BufferedWriter;
 import java.io.Writer;
 import java.nio.charset.Charset;
 
@@ -32,8 +32,8 @@ import java.nio.charset.Charset;
  * A stream based writer for writing delimited text data to a file or a stream.
  */
 public class CsvWriter {
-	private PrintWriter outputStream = null;
-
+	private Writer outputStream = null;
+	
 	private String fileName = null;
 
 	private boolean firstColumn = true;
@@ -48,16 +48,18 @@ public class CsvWriter {
 	private boolean initialized = false;
 
 	private boolean closed = false;
+	
+	private String systemRecordDelimiter = System.getProperty("line.separator");
 
 	/**
-	 * Double up the text qualifier to represent an occurance of the text
+	 * Double up the text qualifier to represent an occurrence of the text
 	 * qualifier.
 	 */
 	public static final int ESCAPE_MODE_DOUBLED = 1;
 
 	/**
 	 * Use a backslash character before the text qualifier to represent an
-	 * occurance of the text qualifier.
+	 * occurrence of the text qualifier.
 	 */
 	public static final int ESCAPE_MODE_BACKSLASH = 2;
 
@@ -113,7 +115,7 @@ public class CsvWriter {
 			throw new IllegalArgumentException("Parameter outputStream can not be null.");
 		}
 
-		this.outputStream = new PrintWriter(outputStream);
+		this.outputStream = outputStream;
 		userSettings.Delimiter = delimiter;
 		initialized = true;
 	}
@@ -387,9 +389,9 @@ public class CsvWriter {
 		if (useCustomRecordDelimiter) {
 			outputStream.write(userSettings.RecordDelimiter);
 		} else {
-			outputStream.println();
+			outputStream.write(systemRecordDelimiter);
 		}
-
+		
 		firstColumn = true;
 	}
 
@@ -447,7 +449,7 @@ public class CsvWriter {
 		if (useCustomRecordDelimiter) {
 			outputStream.write(userSettings.RecordDelimiter);
 		} else {
-			outputStream.println();
+			outputStream.write(systemRecordDelimiter);
 		}
 
 		firstColumn = true;
@@ -459,7 +461,7 @@ public class CsvWriter {
 	private void checkInit() throws IOException {
 		if (!initialized) {
 			if (fileName != null) {
-				outputStream = new PrintWriter(new OutputStreamWriter(
+				outputStream = new BufferedWriter(new OutputStreamWriter(
 						new FileOutputStream(fileName), charset));
 			}
 
@@ -470,8 +472,11 @@ public class CsvWriter {
 	/**
 	 * Clears all buffers for the current writer and causes any buffered data to
 	 * be written to the underlying device.
+	 * @exception IOException
+	 *                Thrown if an error occurs while writing data to the
+	 *                destination stream. 
 	 */
-	public void flush() {
+	public void flush() throws IOException {
 		outputStream.flush();
 	}
 
