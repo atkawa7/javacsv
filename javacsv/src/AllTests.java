@@ -48,7 +48,7 @@ import com.csvreader.CsvWriter;
 
 public class AllTests {
 	public static void main(String[] args) throws Exception {
-		Class testClass = AllTests.class;
+		Class<AllTests> testClass = AllTests.class;
 		ArrayList<Method> setups = new ArrayList<Method>();
 		ArrayList<Method> tearDowns = new ArrayList<Method>();
 
@@ -83,7 +83,7 @@ public class AllTests {
 						setup.invoke(instance, (Object[]) null);
 					}
 
-					Class expectedException = testAnnotation.expected();
+					Class<?> expectedException = testAnnotation.expected();
 
 					// can't for the life of me get eclipse to be able to
 					// resolve Test.None directly
@@ -672,7 +672,7 @@ public class AllTests {
 				new OutputStreamWriter(new FileOutputStream("temp.csv"),
 						Charset.forName("UTF-8"))), ',');
 		// writer will trim all whitespace and put this in quotes to preserve
-		// it's existance
+		// it's existence
 		writer.write(" \t \t");
 		writer.close();
 
@@ -1444,7 +1444,7 @@ public class AllTests {
 	@Test
 	public void test76() throws Exception {
 		CsvReader reader = CsvReader.parse("user_id,name\r\n1,Bruce");
-		Assert.assertEquals(null, reader.getHeaders());
+		Assert.assertNull(reader.getHeaders());
 		Assert.assertEquals(-1, reader.getIndex("user_id"));
 		Assert.assertEquals("", reader.getHeader(0));
 		Assert.assertTrue(reader.readHeaders());
@@ -1455,7 +1455,7 @@ public class AllTests {
 		Assert.assertEquals("user_id", headers[0]);
 		Assert.assertEquals("name", headers[1]);
 		reader.setHeaders(null);
-		Assert.assertEquals(null, reader.getHeaders());
+		Assert.assertNull(reader.getHeaders());
 		Assert.assertEquals(-1, reader.getIndex("user_id"));
 		Assert.assertEquals("", reader.getHeader(0));
 		reader.close();
@@ -1596,7 +1596,7 @@ public class AllTests {
 	@Test
 	public void test88() throws Exception {
 		try {
-			CsvReader reader = new CsvReader((String) null, ',', Charset
+			new CsvReader((String) null, ',', Charset
 					.forName("ISO-8859-1"));
 		} catch (Exception ex) {
 			assertException(new IllegalArgumentException(
@@ -1607,7 +1607,7 @@ public class AllTests {
 	@Test
 	public void test89() throws Exception {
 		try {
-			CsvReader reader = new CsvReader("temp.csv", ',', null);
+			new CsvReader("temp.csv", ',', null);
 		} catch (Exception ex) {
 			assertException(new IllegalArgumentException(
 					"Parameter charset can not be null."), ex);
@@ -1617,7 +1617,7 @@ public class AllTests {
 	@Test
 	public void test90() throws Exception {
 		try {
-			CsvReader reader = new CsvReader((Reader) null, ',');
+			new CsvReader((Reader) null, ',');
 		} catch (Exception ex) {
 			assertException(new IllegalArgumentException(
 					"Parameter inputStream can not be null."), ex);
@@ -1669,7 +1669,7 @@ public class AllTests {
 	@Test
 	public void test112() throws Exception {
 		try {
-			CsvWriter writer = new CsvWriter((String) null, ',', Charset
+			new CsvWriter((String) null, ',', Charset
 					.forName("ISO-8859-1"));
 		} catch (Exception ex) {
 			assertException(new IllegalArgumentException("Parameter fileName can not be null."), ex);
@@ -1679,7 +1679,7 @@ public class AllTests {
 	@Test
 	public void test113() throws Exception {
 		try {
-			CsvWriter writer = new CsvWriter("test.csv", ',', (Charset) null);
+			new CsvWriter("test.csv", ',', (Charset) null);
 		} catch (Exception ex) {
 			assertException(new IllegalArgumentException("Parameter charset can not be null."), ex);
 		}
@@ -1688,7 +1688,7 @@ public class AllTests {
 	@Test
 	public void test114() throws Exception {
 		try {
-			CsvWriter writer = new CsvWriter((Writer) null, ',');
+			new CsvWriter((Writer) null, ',');
 		} catch (Exception ex) {
 			assertException(new IllegalArgumentException("Parameter outputStream can not be null."), ex);
 		}
@@ -2179,7 +2179,7 @@ public class AllTests {
 	public void test149() throws Exception {
 		try
 		{
-			CsvReader reader = new CsvReader("C:\\somefilethatdoesntexist.csv");
+			new CsvReader("C:\\somefilethatdoesntexist.csv");
 		}
 		catch (Exception ex)
 		{
@@ -2200,7 +2200,7 @@ public class AllTests {
 			reader.readRecord();
 		} catch (IOException ex) {
 			// make sure stream that caused exception
-			// has been sent a dipose call
+			// has been sent a dispose call
 			Assert.assertTrue(fail.DisposeCalled);
 			exceptionThrown = true;
 			Assert.assertEquals("Read failed.", ex.getMessage());
@@ -2236,5 +2236,28 @@ public class AllTests {
 		public void close() {
 			DisposeCalled = true;
 		}
+	}
+	
+	@Test
+	public void Test174() throws IOException {
+		// verifies that data is eventually automatically flushed
+		CsvWriter writer = new CsvWriter("temp.csv");
+		
+		for (int i = 0; i < 10000; i++)
+		{
+			writer.write("stuff");
+			writer.endRecord();
+		}
+		
+		CsvReader reader = new CsvReader("temp.csv");
+		
+		Assert.assertTrue(reader.readRecord());
+		
+		Assert.assertEquals("stuff", reader.get(0));
+		
+		writer.close();
+		reader.close();
+
+		new File("temp.csv").delete();
 	}
 }
