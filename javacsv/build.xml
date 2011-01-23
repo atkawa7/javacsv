@@ -8,7 +8,9 @@
 	</target>
 	<target name="compile" depends="init" description="compile the source ">
 		<!-- Compile the java code from ${src} into ${build} -->
-		<javac srcdir="${src}" destdir="${build}" />
+		<javac srcdir="${src}" destdir="${build}" encoding="ISO_8859_1" source="1.4" includeantruntime="false">
+			<exclude name="**/AllTests.java" />
+		</javac>
 	</target>
 	<target name="dist" depends="compile" description="generate the distribution">
 		<jar jarfile="javacsv.jar" basedir="${build}" />
