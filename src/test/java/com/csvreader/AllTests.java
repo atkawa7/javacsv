@@ -1,4 +1,4 @@
-/*
+package com.csvreader;/*
  * Java CSV is a stream based library for reading and writing
  * CSV and other delimited data.
  *   
@@ -42,9 +42,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-
-import com.csvreader.CsvReader;
-import com.csvreader.CsvWriter;
 
 public class AllTests {
 	public static void main(String[] args) throws Exception {
@@ -1058,7 +1055,7 @@ public class AllTests {
 	public void test47() throws Exception {
 		byte[] buffer;
 
-		String test = "München";
+		String test = "Mï¿½nchen";
 
 		ByteArrayOutputStream stream = new ByteArrayOutputStream();
 		PrintWriter writer = new PrintWriter(new OutputStreamWriter(stream,
@@ -1080,7 +1077,7 @@ public class AllTests {
 	public void test48() throws Exception {
 		byte[] buffer;
 
-		String test = "München";
+		String test = "Mï¿½nchen";
 
 		ByteArrayOutputStream stream = new ByteArrayOutputStream();
 		PrintWriter writer = new PrintWriter(new OutputStreamWriter(stream,
