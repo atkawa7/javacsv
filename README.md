@@ -1,13 +1,9 @@
-# javacsv
+# Java CSV
 
-
-example
-
-Example Maven project generated using maven-archetype-quickstart
-
-https://jitpack.io/#jitpack/maven-simple
-
-Release
+Java CSV is a small fast open source Java library for reading and writing CSV and plain delimited text files. All kinds of CSV files can be handled, text qualified, Excel formatted, etc.
+Features
+- Handles column delimiters within data using quoted text qualifiers.
+- Handles record delimiters within data using quoted text qualifiers. 
 
 To use it in your Maven build add:
 ```xml
