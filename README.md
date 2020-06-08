@@ -18,7 +18,7 @@ To use it in your Maven build add:
 and the dependency:
 ```xml
  <dependency>
-    <groupId>io.github.atkawa7.javacsv</groupId>
+    <groupId>io.github.atkawa7</groupId>
     <artifactId>javacsv</artifactId>
     <version>2.0.0</version>
  </dependency>
